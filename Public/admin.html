@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Questions en direct</title>
+</head>
+<body>
+  <h1>Questions reçues</h1>
+  <ul id="list"></ul>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const list = document.getElementById("list");
+
+    fetch("/questions")
+      .then(res => res.json())
+      .then(data => data.forEach(addQuestion));
+
+    socket.on("new-question", addQuestion);
+
+    function addQuestion(q) {
+      const li = document.createElement("li");
+      li.innerText = `${q.name} : ${q.text}`;
+      list.appendChild(li);
+    }
+  </script>
+</body>
+</html>
