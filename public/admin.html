@@ -2,27 +2,63 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Questions en direct</title>
+  <style>
+    body { font-family: Arial; padding: 10px; }
+    li { margin-bottom: 10px; font-size: 16px; }
+    button { padding: 8px; margin-left: 10px; }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+  body { font-family: Arial; padding: 10px; }
+  button { padding: 8px; margin-left: 10px; }
+  li { font-size: 16px; }
+</style>
+
 </head>
 <body>
   <h1>Questions reçues</h1>
+
+  <!-- La liste des questions s'affichera ici -->
   <ul id="list"></ul>
 
+  <!-- Script Socket.io et gestion des questions -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
     const list = document.getElementById("list");
 
+    // Récupère les questions existantes au chargement
     fetch("/questions")
       .then(res => res.json())
       .then(data => data.forEach(addQuestion));
 
+    // Ecoute les nouvelles questions en temps réel
     socket.on("new-question", addQuestion);
 
     function addQuestion(q) {
       const li = document.createElement("li");
-      li.innerText = `${q.name} : ${q.text}`;
+      li.id = q.id;
+
+      const text = document.createElement("span");
+      text.innerText = `${q.name} : ${q.text} `;
+      li.appendChild(text);
+
+      const button = document.createElement("button");
+      button.innerText = q.answered ? "Répondue" : "Marquer Répondue";
+      button.onclick = () => markAnswered(q.id, button, li);
+      li.appendChild(button);
+
       list.appendChild(li);
+    }
+
+    function markAnswered(id, button, li) {
+      fetch(`/answer/${id}`, { method: "POST" })
+        .then(() => {
+          button.innerText = "Répondue";
+          li.style.opacity = 0.5;
+        });
     }
   </script>
 </body>
