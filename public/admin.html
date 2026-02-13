@@ -9,21 +9,11 @@
     li { margin-bottom: 10px; font-size: 16px; }
     button { padding: 8px; margin-left: 10px; }
   </style>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-  body { font-family: Arial; padding: 10px; }
-  button { padding: 8px; margin-left: 10px; }
-  li { font-size: 16px; }
-</style>
-
 </head>
 <body>
   <h1>Questions reçues</h1>
-
-  <!-- La liste des questions s'affichera ici -->
   <ul id="list"></ul>
 
-  <!-- Script Socket.io et gestion des questions -->
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
@@ -34,8 +24,14 @@
       .then(res => res.json())
       .then(data => data.forEach(addQuestion));
 
-    // Ecoute les nouvelles questions en temps réel
+    // Écoute les nouvelles questions
     socket.on("new-question", addQuestion);
+
+    // Écoute les questions supprimées
+    socket.on("remove-question", id => {
+      const li = document.getElementById(id);
+      if (li) li.remove();
+    });
 
     function addQuestion(q) {
       const li = document.createElement("li");
@@ -47,6 +43,8 @@
 
       const button = document.createElement("button");
       button.innerText = q.answered ? "Répondue" : "Marquer Répondue";
+      if (q.answered) li.style.opacity = 0.5;
+
       button.onclick = () => markAnswered(q.id, button, li);
       li.appendChild(button);
 

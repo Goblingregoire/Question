@@ -34,3 +34,13 @@ server.listen(PORT, () => {
   console.log("Serveur lancé sur le port " + PORT);
 });
 
+app.post("/answer/:id", (req, res) => {
+  const qIndex = questions.findIndex(q => q.id == req.params.id);
+  if (qIndex !== -1) {
+    const answeredQuestion = questions.splice(qIndex, 1)[0]; // on supprime la question
+    io.emit("remove-question", answeredQuestion.id); // envoie à tous
+    res.sendStatus(200);
+  } else {
+    res.sendStatus(404);
+  }
+});
