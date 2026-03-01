@@ -6,42 +6,82 @@
   <link rel="stylesheet" href="style.css">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    padding: 10px;
-  }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: url("Fond.png") no-repeat center center fixed;
+  background-size: cover;
+}
 
-  input, textarea, button {
-    width: 100%;
-    margin-bottom: 10px;
-    padding: 10px;
-    font-size: 16px;
-  }
+.overlay {
+  background: rgba(0,0,0,0.5); /* fonce un peu l'image */
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
-  button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
+.card {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+  text-align: center;
+}
 
-  button:hover {
-    background-color: #45a049;
-  }
+.logo {
+  max-width: 120px;
+  margin-bottom: 20px;
+}
 
-  h1 {
-    font-size: 24px;
-  }
+h1 {
+  color: #ce9a23;
+  margin-bottom: 20px;
+}
+
+input, textarea {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border-radius: 8px;
+  border: 2px solid #couleur1;
+  font-size: 16px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: none;
+  background: #couleur1;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+button:hover {
+  background: #0a2f4c;
+}
 </style>
 </head>
 <body>
-  <h1>Posez votre question</h1>
+  <div class="overlay">
+    <div class="card">
+      <img src="logo.png" class="logo" alt="Logo">
 
-  <input id="name" placeholder="Votre prénom (optionnel)">
-  <textarea id="question" placeholder="Votre question"></textarea>
-  <button onclick="sendQuestion()">Envoyer</button>
+      <h1>Posez votre question</h1>
 
-  <p id="status"></p>
+      <input id="name" placeholder="Votre prénom (optionnel)">
+      <textarea id="question" placeholder="Votre question"></textarea>
+
+      <button onclick="sendQuestion()">Envoyer</button>
+
+      <p id="status"></p>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>
