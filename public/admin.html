@@ -3,34 +3,117 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Questions en direct</title>
+  <title>Administration - Questions en direct</title>
+
   <style>
-    body { font-family: Arial; padding: 10px; }
-    li { margin-bottom: 10px; font-size: 16px; }
-    button { padding: 8px; margin-left: 10px; }
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: url("Fond.png") no-repeat center center fixed;
+      background-size: cover;
+    }
+
+    .overlay {
+      background: rgba(0,0,0,0.6);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .card {
+      background: rgba(255,255,255,0.9);
+      backdrop-filter: blur(10px);
+      padding: 40px;
+      border-radius: 15px;
+      width: 100%;
+      max-width: 900px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    }
+
+    .logo {
+      display: block;
+      margin: 0 auto 20px auto;
+      max-width: 140px;
+    }
+
+    h1 {
+      text-align: center;
+      color: #ce9a23;
+      margin-bottom: 30px;
+    }
+
+    ul {
+      padding: 0;
+      margin: 0;
+    }
+
+    li {
+      list-style: none;
+      background: #f9f9f9;
+      padding: 15px;
+      border-left: 5px solid #couleur1;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    button {
+      background: #ce9a23;
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #0a2f4c;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 </head>
+
 <body>
-  <h1>Questions reçues</h1>
-  <ul id="list"></ul>
+  <div class="overlay">
+    <div class="card">
+      
+      <img src="logo.png" class="logo" alt="Logo">
+
+      <h1>Questions reçues en direct</h1>
+
+      <ul id="list"></ul>
+
+    </div>
+  </div>
 
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
     const list = document.getElementById("list");
 
-    // Récupère les questions existantes au chargement
     fetch("/questions")
       .then(res => res.json())
       .then(data => data.forEach(addQuestion));
 
-    // Écoute les nouvelles questions
     socket.on("new-question", addQuestion);
 
-    // Écoute les questions supprimées
     socket.on("remove-question", id => {
       const li = document.getElementById(id);
-      if (li) li.remove();
+      if (li) {
+        li.style.opacity = "0";
+        setTimeout(() => li.remove(), 300);
+      }
     });
 
     function addQuestion(q) {
@@ -38,26 +121,21 @@
       li.id = q.id;
 
       const text = document.createElement("span");
-      text.innerText = `${q.name} : ${q.text} `;
+      text.innerText = `${q.name} : ${q.text}`;
       li.appendChild(text);
 
       const button = document.createElement("button");
-      button.innerText = q.answered ? "Répondue" : "Marquer Répondue";
-      if (q.answered) li.style.opacity = 0.5;
+      button.innerText = "Marquer répondue";
 
-      button.onclick = () => markAnswered(q.id, button, li);
+      button.onclick = () => {
+        fetch(`/answer/${q.id}`, { method: "POST" });
+      };
+
       li.appendChild(button);
 
-      list.appendChild(li);
-    }
-
-    function markAnswered(id, button, li) {
-      fetch(`/answer/${id}`, { method: "POST" })
-        .then(() => {
-          button.innerText = "Répondue";
-          li.style.opacity = 0.5;
-        });
+      list.prepend(li);
     }
   </script>
+
 </body>
 </html>
