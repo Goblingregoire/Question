@@ -1,20 +1,28 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Poser une question</title>
-  <link rel="stylesheet" href="style.css">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Poser une question</title>
+
 <style>
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
-  background: url("Fond.png") no-repeat center center fixed;
+  background: url("Fond-mobile.png") no-repeat center center fixed;
   background-size: cover;
 }
 
+/* Image différente sur PC */
+@media (min-width: 1024px) {
+  body {
+    background: url("Fond-desktop.png") no-repeat center center fixed;
+    background-size: cover;
+  }
+}
+
 .overlay {
-  background: rgba(0,0,0,0.5); /* fonce un peu l'image */
+  background: rgba(0,0,0,0.5);
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -67,22 +75,23 @@ button:hover {
 }
 </style>
 </head>
+
 <body>
-  <div class="overlay">
-    <div class="card">
-      <img src="logo-2.png" class="logo" alt="Logo">
+<div class="overlay">
+<div class="card">
 
-      <h1>Posez votre question</h1>
+<img src="logo-2.png" class="logo" alt="Logo">
+<h1>Posez votre question</h1>
 
-      <input id="name" placeholder="Votre prénom (optionnel)">
-      <textarea id="question" placeholder="Votre question"></textarea>
+<input id="name" placeholder="Votre prénom (optionnel)">
+<textarea id="question" placeholder="Votre question"></textarea>
 
-      <button onclick="sendQuestion()">Envoyer</button>
+<button onclick="sendQuestion()">Envoyer</button>
+<p id="status"></p>
 
-      <p id="status"></p>
-    </div>
-  </div>
+</div>
+</div>
 
-  <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
